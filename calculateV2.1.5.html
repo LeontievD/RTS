@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Калькулятор</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+        <script src="https://unpkg.com/docx@5.0.2/build/index.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="http://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+
+        <script type="text/javascript">
+            function calc(){
+
+                var nalog = document.getElementById("nalog").selectedIndex;
+                var vid = document.getElementById("vid").selectedIndex;
+                var orga = document.getElementById("orga").selectedIndex;
+                var baza = document.getElementById("baza").selectedIndex;
+                //input
+                var workers = document.getElementById("workers").value;
+                //dop
+                var vad = document.getElementById("vad").selectedIndex;
+                var KPstring;
+
+
+                if (orga == 0 && workers == 0 && baza == 4) {    //Старт   
+                    KPstring = " тариф 'Старт'";
+                    }
+                    
+                else if ((orga == 0 || orga == 1) && nalog == 0  && baza == 0) { //Базовый
+
+                    KPstring ="тариф 'Базовый'";
+                }
+
+                else if ((orga == 0 || orga == 1) && nalog == 0 && (baza == 0 || baza == 1 || baza == 2)) {   //Стандарт
+
+                    KPstring =" тариф 'Стандарт'";
+
+                    }
+
+                else if (orga == 0  && nalog == 1 && baza == 0) { //УСН 6% базовый
+
+
+                    KPstring =" тариф 'УСН 6% Базовый'";
+                }
+
+                else if (orga == 0 && nalog == 1 && (baza == 0 || baza == 1 || baza == 2)) { //УСН 6% стандарт
+
+                    KPstring =" тариф 'УСН 6% стандарт'";
+                    }
+
+                else if (orga == 0 && baza == 0 && nalog == 2) { //УСН 15% базовый
+
+                    KPstring =" тариф 'УСН 15% базовый'";
+                }
+
+                else if (orga == 0 && nalog == 2 && (baza == 0 || baza == 1 || baza == 2) ) { //УСН 15% стандарт
+
+                    KPstring = " тариф 'УСН 15% стандарт'";
+                    }
+     
+                else if (orga == 1) { //ИП
+
+                     KPstring = " тариф 'Специально для ИП'";
+                }
+                 if (workers == 0 && nalog == 1){
+                        KPstring = " тариф 'Специально для ИП'";
+
+                    } 
+                return KPstring;
+            }
+
+
+            function calcPrice(){
+
+                var nalog = document.getElementById("nalog").selectedIndex;
+                var vid = document.getElementById("vid").selectedIndex;
+                var orga = document.getElementById("orga").selectedIndex;
+                var baza = document.getElementById("baza").selectedIndex;
+                //input
+                var workers = document.getElementById("workers").value;
+                //dop
+                var vad = document.getElementById("vad").selectedIndex;
+                var StandartPrice = 0;
+                var price = 0;
+                var fuck = "Цена договорная! Свяжитесь с Еленой!"
+
+                if (orga == 0 && workers == 0 && baza == 4) {    //Старт 
+                    
+                    price = 5000;
+                   
+                    }
+                    
+                else if ((orga == 0 || orga == 1) && nalog == 0) { //Базовый
+
+                    StandartPrice = 11000;
+                    price = StandartPrice;
+                    
+                    switch(vid){
+                    case 1:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 2:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 3:
+                    price = StandartPrice * 1.15;
+                    break;
+
+                    case 4:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 5:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    
+
+                    }
+
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    }
+                    if (workers > 3 && workers < 10){
+                        price = price + (workers - 3) * 500;
+                    }else if (workers > 10){
+                        price = price + (workers - 3) * 300;
+                    }
+                    
+                    if (baza == 1) {
+                        price = price + StandartPrice * 0.1;
+                    } else if(baza == 2){
+                        price = price + StandartPrice * 0.2;
+                    }
+
+                    
+                }
+
+                else if ((orga == 0 || orga == 1) && nalog == 0 && (baza == 0 || baza == 1 || baza == 2)) {   //Стандарт
+
+                    StandartPrice = 25000;
+                    price = StandartPrice;
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    }
+                    if (workers > 10){
+                        price = price + (workers - 10) * 300;
+                    }
+                    
+                    }
+
+                else if (orga == 0  && nalog == 1 ) { //УСН 6% базовый
+
+                    StandartPrice = 10000;
+                    price = StandartPrice;
+
+                    switch(vid){
+                    case 1:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 2:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 3:
+                    price = StandartPrice * 1.15;
+                    break;
+
+                    case 4:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 5:
+                    price = StandartPrice * 1.25;
+                    break;
+                        
+                    }
+
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    }
+
+                    if (workers > 3 && workers < 10){
+                        price = price + (workers - 3) * 500;
+                    }else if (workers > 10){
+                        price = price + (workers - 10) * 300;
+                    }
+
+                    if (baza == 1) {
+                        price = price + StandartPrice * 0.1;
+                    } else if(baza == 2){
+                        price = price + StandartPrice * 0.2;
+                    }
+                   
+                }
+
+                else if (orga == 0 && nalog == 1 && (baza == 0 || baza == 1 || baza == 2)) { //УСН 6% стандарт
+
+                    StandartPrice = 15000;
+                    price = StandartPrice;
+
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    }
+                    if (workers > 10){
+                        price = price + (workers - 10) * 300;
+                    }
+                   
+                    }
+                else if (orga == 0 && nalog == 2) { //УСН 15% базовый
+
+                    StandartPrice = 11000;
+                    price = StandartPrice;
+
+                    switch(vid){
+                    case 1:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 2:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 3:
+                    price = StandartPrice * 1.15;
+                    break;
+
+                    case 4:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 5:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    }
+
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    }
+
+                    if (workers > 3 && workers < 10){
+                        price = price + (workers - 3) * 500;
+                    }else if (workers > 10){
+                        price = price + (workers - 3) * 300;
+                    }
+
+                    if (baza == 1) {
+                        price = price + StandartPrice * 0.1;
+                    } else if(baza == 2){
+                        price = price + StandartPrice * 0.2;
+                    }
+                    
+                }
+
+                else if (orga == 0 && nalog == 2 && (baza == 0 || baza == 1 || baza == 2) ) { //УСН 15% стандарт
+
+                    StandartPrice = 22000;
+                    price = StandartPrice;
+
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    }
+                    if (workers > 10){
+                        price = price + (workers - 10) * 300;
+                    }
+                   
+                    }
+
+                    
+                else if (orga == 1) { //ИП
+
+                    if (nalog == 0 || nalog == 1) {
+
+                            StandartPrice = 5000;
+                    } else {
+                        StandartPrice = 10000;
+                    }
+
+                    switch(vid){
+
+                    case 0:
+                    price = StandartPrice;
+                    break;
+
+                    case 1:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 2:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 3:
+                    price = StandartPrice * 1.15;
+                    break;
+
+                    case 4:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    case 5:
+                    price = StandartPrice * 1.25;
+                    break;
+
+                    }
+
+                    if (workers == 0 && nalog == 1){
+                        price = 5000;
+
+                    } 
+                    else if (workers > 10 && nalog == 1) {
+                        price = price + (workers - 10) * 300;
+                    }
+                    else if (workers > 20 && nalog == 2) {
+                        price = price + (workers - 20) * 300;
+                    }
+
+
+                    if (vad == 1) {
+                        price = StandartPrice * 1.3;
+                    } 
+
+                    if (baza == 1) {
+                        price = price + StandartPrice * 0.1;
+                    } else if(baza == 2){
+                        price = price + StandartPrice * 0.2;
+                    }
+
+                }
+                if (vid == 5){
+                    alert("Требуется общение Елены, ТСЖ - много подводных камней. Примерная цена после кнопки окей. ");
+                }
+                if (price != 0) {
+                   return price; 
+                } else{
+                    return fuck;
+                }
+                
+            }
+
+               
+
+
+        </script>
+    </head>
+
+    <body>
+        <div class="header">
+            
+        </div>
+    <div class="block-calc">
+
+                    <p>Оргаанизационно-правовая форма</p>
+                    <select id="orga">
+                        <option value="0">ООО</option>
+                        <option value="1">ИП</option>
+                    </select>
+
+                    <p>Система налогооблажения</p>
+                        <select id="nalog">
+                            <option value="0">ОСНО</option>
+                            <option value="1">УСН Доходы (6%)</option>
+                            <option value="2">УСН Доходы-Расходы (15%)</option>
+                        </select>
+
+                    <p>Вид деятельности</p>
+                    <select id="vid">
+                        <option value="0">Услуги, Оптовая торговля, Мелкоптовая торговля</option>
+                        <option value="1">Розничная торговля</option>
+                        <option value="2">Строительство</option>
+                        <option value="3">Производство</option>
+                        <option value="4">НКО</option>
+                        <option value="5">ТСЖ</option>
+                    </select>
+
+
+                    <p>Колличество движений по расчетному счету: </p>
+                    <select id="baza">
+                        <option value="0">1-5</option>
+                        <option value="1">6-30</option>
+                        <option value="2">51-120</option>
+                        <option value="3">Свыше 120</option>
+                        <option value="4">Нет</option>
+                    </select>
+
+                    <p>Расчет ЗП и кадровый учет, колличество работников</p>
+                    <input  id="workers">
+                    <div>
+                        
+                        <p>Наличие ВЭД, валютных операций</p>
+                        <select id="vad">
+                            <option value="0">нет</option>
+                            <option value="1">да</option>
+                        </select> 
+                        <p>________________________</p>
+                        <div class="cost">Стоимость рублей в месяц</div>
+                        <div class="za"><button onclick="writer()">Рассчитать</button></div>
+                    </div>
+
+                   <p>________________________</p>
+
+                      <p id="">Полное название организации:</p>
+                    <input  id="OrgName">
+                    <div class="za"><button id="downloud" onclick="KPedditor()">Создать КП</button></div>
+                    <p>________________________</p>
+
+                     <div class="add_to_me">
+                    <table id="KPinfo">
+                        <tr>
+                        <th class="stringKP"></th>
+                        <th class="priceKP"></th>
+                        <th class="nameKP"></th>
+                        <th class="workersKP"></th>
+                        <th class="orgaKP"></th>
+                        <th class="nalogKP"></th>
+                        <th class="bazaKP"></th>    
+                        </tr>
+                        </table>    
+                    </div>
+                    
+                                       
+        </div>
+    </body>
+    <script type="text/javascript">
+
+            function writer(){
+            var alertString = calc();
+            var alertPrice = calcPrice();
+            var workers = document.getElementById("workers").value;
+            alert(alertPrice + " рублей, " + alertString + " c колличеством сотрудников: " + workers);
+
+        }
+       function KPedditor(){
+
+            var KPstringTable = calc();
+            var KPprice = calcPrice();
+            var workers = document.getElementById("workers").value;
+            var OrgName = document.getElementById("OrgName").value;
+            var nalog = document.getElementById("nalog").selectedIndex;
+            var orga = document.getElementById("orga").selectedIndex;
+            var baza = document.getElementById("baza").selectedIndex;
+
+            $('.stringKP').append(KPstringTable);
+            $('.priceKP').append(KPprice);
+            $('.workersKP').append(workers);
+            $('.nameKP').append(OrgName);
+            if(orga == 0){
+                $('.orgaKP').append("ООО");
+            }else{
+                $('.orgaKP').append("ИП");
+            }
+
+            if(nalog == 0){
+                $('.nalogKP').append("ОСНО");
+            }
+            if (nalog == 1){
+                $('.nalogKP').append("УСН 6%");
+            }
+            if (nalog == 2){
+                $('.nalogKP').append("УСН 15%");
+            }
+
+             if(baza == 0){
+                $('.bazaKP').append("до 5");
+            }
+            if (baza == 1){
+                $('.bazaKP').append("до 30");
+            }
+            if (baza == 2){
+                $('.bazaKP').append("до 120");
+            }
+            if (baza == 3){
+                $('.bazaKP').append("Свыше 120");
+            }
+
+
+
+
+            KPmap();  
+        }
+
+        function KPmap(){
+            var OrgName = document.getElementById("OrgName").value;
+            var KP_putter
+            $(document).ready(function () {
+            $("#KPinfo").table2excel({
+            filename: "КП.xls"
+            });
+            });
+        }
+
+    </script>
+
+    <style>
+    #unrelsed{ 
+    background-color: rgb(128, 0, 0);  
+   }
+  </style>
+</html>
